@@ -20,6 +20,7 @@ $(document).ready(function(){ //esse jeito é usando o jquery
         $(btn).find('i').addClass('d-none');
         $(btn).find('span').removeClass('d-none');
 
+        /*  
         $.ajax(endpoint).done(function(res){
 
             const street = res.logradouro;
@@ -32,6 +33,36 @@ $(document).ready(function(){ //esse jeito é usando o jquery
 
             $(btn).find('i').removeClass('d-none');
             $(btn).find('span').addClass('d-none');
+        }) 
+        */
+        //o then tem um comportamento semelhante ao try
+        fetch(endpoint).then(function(res){
+            return res.json()
         })
+        .then(function(json){
+            const street = json.logradouro;
+            const neighborhood = json.bairro;
+            const city = json.localidade;
+            const state = json.uf;
+            const address = `${street}, ${neighborhood} - ${city} - ${state}`;
+            
+            $('#address').val(address);
+
+        })
+        .catch(function(error){
+            alert('Ocorreu um erro ao buscar o endereço. Tente mais tarde.')
+        })
+        .finally(function(){
+            $(btn).find('i').removeClass('d-none');
+            $(btn).find('span').addClass('d-none');
+        })
+    });
+
+    $('#order-form').submit(function(e){
+        e.preventDefault();
+
+        if($('#name').val().length <= 1){
+            throw new Error('Digite o seu nome.');
+        }
     })
 })
